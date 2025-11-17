@@ -1,0 +1,10 @@
+@if (showSidebar()) {
+  <div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="flex-grow-1">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+} @else {
+  <router-outlet></router-outlet>
+}

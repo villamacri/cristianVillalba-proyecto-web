@@ -1,0 +1,26 @@
+      .sidebar {
+          min-height: 100vh;
+          border-right: 1px solid #CBD5E1;
+          position: sticky;
+          top: 0;
+          overflow-y: auto;
+      }
+
+      .sidebar-link {
+          color: #1E3A5F;
+          border-radius: 12px;
+          transition: background-color 0.2s;
+      }
+
+      .sidebar-link:hover {
+          background-color: #EFF6FF;
+      }
+
+      .sidebar-link.active {
+          background-color: #60A5FA;
+          color: white;
+      }
+      
+      .sidebar-link.active i {
+          color: white;
+      }

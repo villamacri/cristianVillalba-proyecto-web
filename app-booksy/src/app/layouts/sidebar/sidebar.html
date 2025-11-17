@@ -1,0 +1,56 @@
+<!-- Sidebar -->
+<div class="d-flex flex-column bg-white sidebar" style="width: 256px; min-height: 100vh;">
+    <!-- Logo -->
+    <div class="p-3 border-bottom" style="height: 69px">
+        <img src="https://placehold.co/78x58" alt="Logo" style="height: 40px" />
+    </div>
+
+    <!-- Menu Items -->
+    <div class="flex-grow-1 p-3">
+        <div class="d-flex flex-column gap-2">
+            <a routerLink="/dashboard" routerLinkActive="active"
+                class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+            <a routerLink="/usuarios" routerLinkActive="active"
+                class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none">
+                <i class="bi bi-people"></i>
+                <span>Usuarios</span>
+            </a>
+            <a routerLink="/transacciones" routerLinkActive="active"
+                class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none">
+                <i class="bi bi-credit-card"></i>
+                <span>Transacciones</span>
+            </a>
+            <a routerLink="/libros" routerLinkActive="active"
+                class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none">
+                <i class="bi bi-book"></i>
+                <span>Libros</span>
+            </a>
+            <a routerLink="/eventos" routerLinkActive="active"
+                class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none">
+                <i class="bi bi-calendar-event"></i>
+                <span>Eventos</span>
+            </a>
+            <a routerLink="/reportes" routerLinkActive="active"
+                class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none">
+                <i class="bi bi-file-text"></i>
+                <span>Reportes</span>
+            </a>
+            <a routerLink="/feedback" routerLinkActive="active"
+                class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none">
+                <i class="bi bi-chat-left-text"></i>
+                <span>Feedback</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Logout -->
+    <div class="p-3 border-top">
+        <a href="#" class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none">
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Cerrar sesión</span>
+        </a>
+    </div>
+</div>

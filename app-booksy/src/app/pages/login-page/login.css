@@ -1,0 +1,38 @@
+:host {
+    display: block;
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 50%, #ECFEFF 100%);
+    min-height: 100vh;
+}
+
+.card {
+    border-radius: 16px;
+    border: 1px solid #CBD5E1;
+    max-width: 560px;
+}
+
+.btn-primary {
+    background-color: #60A5FA;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #3b82f6;
+}
+
+.link-primary {
+    color: #60A5FA;
+    text-decoration: none;
+}
+
+.link-primary:hover {
+    color: #3b82f6;
+}
+
+.form-control {
+    background-color: #F8FAFC;
+    border: none;
+}
+
+.text-dark-blue {
+    color: #1E3A5F;
+}
