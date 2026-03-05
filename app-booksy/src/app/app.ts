@@ -20,7 +20,7 @@ export class App {
     ).subscribe((event) => {
       // Usamos urlAfterRedirects para detectar la ruta final exacta tras redirecciones
       const currentUrl = (event.urlAfterRedirects || event.url).split('?')[0]; 
-      const publicRoutes = ['/login', '/register'];
+      const publicRoutes = ['/login'];
       // El sidebar se muestra si NO estamos en una de las rutas públicas
       this.showSidebar.set(!publicRoutes.includes(currentUrl));
     });

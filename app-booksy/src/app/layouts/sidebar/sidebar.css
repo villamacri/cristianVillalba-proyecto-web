@@ -24,3 +24,19 @@
       .sidebar-link.active i {
           color: white;
       }
+
+      .sidebar-logo-wrapper {
+          display: flex;
+          align-items: flex-start;
+          justify-content: flex-start;
+          padding: 0 4px;
+          box-sizing: border-box;
+      }
+
+      .sidebar-logo {
+          height: 100%;
+          width: auto;
+          max-width: calc(100% - 8px);
+          object-fit: contain;
+          display: block;
+      }

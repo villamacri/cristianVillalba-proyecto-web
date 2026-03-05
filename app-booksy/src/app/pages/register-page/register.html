@@ -1,68 +1,47 @@
 <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
     <div class="card shadow">
         <div class="card-body p-5">
-            <!-- Header -->
             <div class="mb-5">
-                <h2 class="h5 fw-medium text-dark-blue mb-2">Crear Cuenta</h2>
-                <p class="text-muted mb-0">Completa el formulario para registrarte</p>
+                <h2 class="h5 fw-medium text-dark-blue mb-2">Añadir Usuario</h2>
+                <p class="text-muted mb-0">Crea un nuevo usuario administrador desde el panel.</p>
             </div>
 
-            <!-- Form -->
-            <form>
-                <!-- Full Name Input -->
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                 <div class="mb-4">
-                    <label class="form-label fw-medium text-dark-blue small">Nombre completo</label>
-                    <input type="text" class="form-control rounded-3">
+                    <label class="form-label fw-medium text-dark-blue small" for="name">Nombre</label>
+                    <input type="text" class="form-control rounded-3" id="name" name="name" formControlName="name">
                 </div>
 
-                <!-- Email Input -->
                 <div class="mb-4">
-                    <label class="form-label fw-medium text-dark-blue small">Correo electrónico</label>
-                    <input type="email" class="form-control rounded-3">
+                    <label class="form-label fw-medium text-dark-blue small" for="last_name">Apellidos</label>
+                    <input type="text" class="form-control rounded-3" id="last_name" name="last_name" formControlName="last_name">
                 </div>
 
-                <!-- Organization Input -->
                 <div class="mb-4">
-                    <label class="form-label fw-medium text-dark-blue small">Organización (opcional)</label>
-                    <input type="text" class="form-control rounded-3">
+                    <label class="form-label fw-medium text-dark-blue small" for="email">Correo electrónico</label>
+                    <input type="email" class="form-control rounded-3" id="email" name="email" formControlName="email">
                 </div>
 
-                <!-- Password Input -->
                 <div class="mb-3">
-                    <label class="form-label fw-medium text-dark-blue small">Contraseña</label>
-                    <input type="password" class="form-control rounded-3" >
-                    <small class="text-muted">Mínimo 8 caracteres</small>
+                    <label class="form-label fw-medium text-dark-blue small" for="password">Contraseña (opcional)</label>
+                    <input type="password" class="form-control rounded-3" id="password" name="password" formControlName="password">
+                    <small class="text-muted">Si se deja vacía, Laravel asignará una contraseña por defecto.</small>
                 </div>
 
-                <!-- Confirm Password Input -->
-                <div class="mb-4">
-                    <label class="form-label fw-medium text-dark-blue small">Confirmar contraseña</label>
-                    <input type="password" class="form-control rounded-3">
-                </div>
+                @if (errorMessage) {
+                    <div class="alert alert-danger mb-3">{{ errorMessage }}</div>
+                }
 
-                <!-- Terms and Conditions -->
-                <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" id="terms">
-                    <label class="form-check-label text-muted" for="terms">
-                        Acepto los <a href="#" class="link-primary small">términos y condiciones</a> y la <a href="#" class="link-primary small">política de privacidad</a>
-                    </label>
-                </div>
+                @if (successMessage) {
+                    <div class="alert alert-success mb-3">{{ successMessage }}</div>
+                }
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary w-100 fw-medium mb-4 rounded-3">
-                    Crear Cuenta
+                <button type="submit" class="btn btn-primary w-100 fw-medium mb-4 rounded-3" [disabled]="isSubmitting">
+                    {{ isSubmitting ? 'Creando...' : 'Crear Usuario' }}
                 </button>
 
-                <!-- Divider -->
-                <div class="position-relative mb-4">
-                    <hr style="border-color: #CBD5E1;">
-                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted">o</span>
-                </div>
-
-                <!-- Login Link -->
                 <div class="text-center">
-                    <span class="text-muted">¿Ya tienes una cuenta?</span>
-                    <a routerLink="/login" class="link-primary small ms-2">Inicia sesión</a>
+                    <a routerLink="/usuarios" class="link-primary small">Volver al listado de usuarios</a>
                 </div>
             </form>
         </div>

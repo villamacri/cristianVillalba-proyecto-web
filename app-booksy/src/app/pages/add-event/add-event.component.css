@@ -1,0 +1,9 @@
+.form-control {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+}
+
+.form-label {
+  color: #334155;
+  font-weight: 600;
+}

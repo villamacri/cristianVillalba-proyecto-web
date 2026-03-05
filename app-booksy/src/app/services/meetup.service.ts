@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Meetup } from '../models/meetup.model';
+import { Meetup, MeetupRequest, MeetupResponse } from '../models/meetup.model';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -16,16 +16,23 @@ export class MeetupService {
     return this.http.get<Meetup[]>(`${this.apiUrl}/meetups`);
   }
 
+  getMeetup(id: number): Observable<MeetupResponse> {
+    return this.http.get<MeetupResponse>(`${this.apiUrl}/meetups/${id}`);
+  }
+
   getParticipants(id: number): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/meetups/${id}/participants`);
   }
 
-  createMeetup(meetup: Partial<Meetup>): Observable<Meetup> {
-    return this.http.post<Meetup>(`${this.apiUrl}/meetups`, meetup);
+  createMeetup(meetupData: MeetupRequest): Observable<MeetupResponse> {
+    return this.http.post<MeetupResponse>(`${this.apiUrl}/meetups`, meetupData);
   }
 
-  updateMeetup(id: number, meetup: Partial<Meetup>): Observable<Meetup> {
-    return this.http.put<Meetup>(`${this.apiUrl}/meetups/${id}`, meetup);
+  updateMeetup(
+    id: number,
+    meetupData: Partial<Meetup> & Partial<MeetupRequest>
+  ): Observable<MeetupResponse> {
+    return this.http.put<MeetupResponse>(`${this.apiUrl}/meetups/${id}`, meetupData);
   }
 
   deleteMeetup(id: number): Observable<void> {

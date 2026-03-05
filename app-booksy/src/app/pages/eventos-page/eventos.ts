@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Meetup } from '../../models/meetup.model';
 import { MeetupService } from '../../services/meetup.service';
 
 @Component({
   selector: 'app-eventos',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './eventos.html',
   styleUrl: './eventos.css',
 })
@@ -43,6 +44,52 @@ export class Eventos implements OnInit {
 
   get inProgressMeetupsCount(): number {
     return this.meetups.filter((meetup) => this.isSameDay(meetup.date)).length;
+  }
+
+  verDetallesEvento(id: number): void {
+    this.meetupService.getMeetups().subscribe({
+      next: (meetups) => {
+        const meetup = meetups.find((item) => item.id === id);
+
+        if (!meetup) {
+          this.errorMessage = 'No se encontro el evento.';
+          return;
+        }
+
+        alert(`Evento: ${meetup.title}\nFecha: ${meetup.date}\nUbicacion: ${meetup.city}`);
+      },
+      error: () => {
+        this.errorMessage = 'No se pudieron cargar los detalles del evento.';
+      },
+    });
+  }
+
+  verParticipantesEvento(id: number): void {
+    this.meetupService.getParticipants(id).subscribe({
+      next: (users) => {
+        this.participantsByMeetup[id] = users.length;
+        alert(`Participantes registrados: ${users.length}`);
+      },
+      error: () => {
+        this.errorMessage = 'No se pudieron cargar los participantes del evento.';
+      },
+    });
+  }
+
+  eliminarEvento(id: number): void {
+    if (!confirm('¿Seguro que deseas eliminar este evento?')) {
+      return;
+    }
+
+    this.meetupService.deleteMeetup(id).subscribe({
+      next: () => {
+        this.meetups = this.meetups.filter((meetup) => meetup.id !== id);
+        delete this.participantsByMeetup[id];
+      },
+      error: () => {
+        this.errorMessage = 'No se pudo eliminar el evento.';
+      },
+    });
   }
 
   private loadParticipants(): void {

@@ -4,7 +4,7 @@
       <h2 class="mb-1" style="color: #1E3A5F; font-size: 24px; font-weight: 500;">Eventos</h2>
       <p class="mb-0" style="color: #64748B;">Organiza y gestiona eventos literarios</p>
     </div>
-    <button class="btn btn-primary" style="background-color: #60A5FA; border: none;">
+    <button class="btn btn-primary" style="background-color: #60A5FA; border: none;" routerLink="/eventos/add">
       <i class="bi bi-plus-lg me-2"></i>Crear Evento
     </button>
   </div>
@@ -42,24 +42,24 @@
 
   <div class="row">
     <div class="col-lg-8">
-      @for (meetup of meetups; track meetup.id) {
+      @for (evento of meetups; track evento.id) {
         <div class="card border-0 p-4 mb-3" style="border-radius: 16px; border: 1px solid #CBD5E1;">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <div>
-              <h5 class="mb-1" style="color: #1E3A5F; font-weight: 500;">{{ meetup.title }}</h5>
-              <p class="mb-0" style="color: #64748B;">{{ meetup.description }}</p>
+              <h5 class="mb-1" style="color: #1E3A5F; font-weight: 500;">{{ evento.title }}</h5>
+              <p class="mb-0" style="color: #64748B;">{{ evento.description }}</p>
             </div>
-            <span class="badge rounded-pill px-3" style="background-color: #60A5FA; color: white;">{{ getEventStatus(meetup) }}</span>
+            <span class="badge rounded-pill px-3" style="background-color: #60A5FA; color: white;">{{ getEventStatus(evento) }}</span>
           </div>
           <div class="d-flex gap-4 mb-3" style="color: #64748B;">
-            <span><i class="bi bi-calendar3 me-2"></i>{{ meetup.date }}</span>
-            <span><i class="bi bi-geo-alt me-2"></i>{{ meetup.city }}</span>
-            <span><i class="bi bi-people me-2"></i>{{ participantsByMeetup[meetup.id] ?? 0 }}</span>
+            <span><i class="bi bi-calendar3 me-2"></i>{{ evento.date }}</span>
+            <span><i class="bi bi-geo-alt me-2"></i>{{ evento.city }}</span>
+            <span><i class="bi bi-people me-2"></i>{{ participantsByMeetup[evento.id] ?? 0 }}</span>
           </div>
           <div class="d-flex gap-2">
-            <button class="btn btn-sm" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;">Ver detalles</button>
-            <button class="btn btn-sm" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;">Editar</button>
-            <button class="btn btn-sm" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;">Participantes</button>
+            <button class="btn btn-sm" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;" [routerLink]="['/eventos/edit', evento.id]">Editar</button>
+            <button class="btn btn-sm" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;" (click)="verParticipantesEvento(evento.id)">Participantes</button>
+            <button class="btn btn-sm" style="background-color: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA;" (click)="eliminarEvento(evento.id)">Eliminar</button>
           </div>
         </div>
       } @empty {

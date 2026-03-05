@@ -1,17 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   email: string = '';
   password: string = '';
@@ -32,7 +33,18 @@ export class Login {
     this.authService.login(credentials).subscribe({
       next: (response) => {
         console.log('Login exitoso:', response);
-        // El AuthService ya maneja el guardado del token y la redirección
+
+        if (!response.user || response.user.role !== 'admin') {
+          this.authService.logout();
+          this.errorMessage = 'Acceso denegado: Este panel es solo para administradores.';
+          this.isLoading = false;
+          return;
+        }
+
+        this.authService.startSession(response.token, response.user);
+
+        this.isLoading = false;
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         console.error('Error en el login:', error);

@@ -1,85 +1,145 @@
 <div class="p-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="mb-1" style="color: #1E3A5F; font-size: 24px; font-weight: 500;">Libros Publicados</h2>
-            <p class="mb-0" style="color: #64748B;">Administra el catálogo de libros</p>
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;" (click)="exportarPDF()">
-                <i class="bi bi-file-earmark-pdf me-2"></i>Exportar a PDF
-            </button>
-            <button class="btn btn-primary" style="background-color: #60A5FA; border: none;">
-                <i class="bi bi-book me-2"></i>Añadir Libro
-            </button>
-        </div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1" style="color: #1e3a5f; font-size: 24px; font-weight: 500;">Libros Publicados</h2>
+      <p class="mb-0" style="color: #64748b;">Administra el catalogo de libros</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button
+        class="btn"
+        style="background-color: #eff6ff; color: #1e3a5f; border: 1px solid #cbd5e1;"
+        (click)="exportarPDF()"
+      >
+        <i class="bi bi-file-earmark-pdf me-2"></i>Exportar a PDF
+      </button>
+      <button class="btn btn-primary" style="background-color: #60a5fa; border: none;" routerLink="/libros/add">
+        <i class="bi bi-book me-2"></i>Añadir Libro
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+  }
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 p-3" style="border-radius: 16px; border: 1px solid #cbd5e1;">
+        <p class="mb-2" style="color: #64748b;">Total Libros</p>
+        <h4 class="mb-0" style="color: #1e3a5f;">{{ totalBooks() }}</h4>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 p-3" style="border-radius: 16px; border: 1px solid #cbd5e1;">
+        <p class="mb-2" style="color: #64748b;">Ventas</p>
+        <h4 class="mb-0" style="color: #60a5fa;">{{ salesCount() }}</h4>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 p-3" style="border-radius: 16px; border: 1px solid #cbd5e1;">
+        <p class="mb-2" style="color: #64748b;">Intercambios</p>
+        <h4 class="mb-0" style="color: #00a63e;">{{ exchangeCount() }}</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-toolbar mb-3">
+    <div class="search-wrapper">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar por titulo o autor"
+        [value]="searchTerm()"
+        (input)="onSearchChange($event)"
+      >
     </div>
 
-    @if (errorMessage) {
-        <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
-    }
-
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card border-0 p-3" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <p class="mb-2" style="color: #64748B;">Total Libros</p>
-                <h4 class="mb-0" style="color: #1E3A5F;">{{ listaLibros.length }}</h4>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 p-3" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <p class="mb-2" style="color: #64748B;">Ventas</p>
-                <h4 class="mb-0" style="color: #60A5FA;">{{ salesCount }}</h4>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 p-3" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <p class="mb-2" style="color: #64748B;">Intercambios</p>
-                <h4 class="mb-0" style="color: #00A63E;">{{ exchangeCount }}</h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        @for (libro of listaLibros; track libro.id) {
-            <div class="col-lg-4 col-md-6">
-                <div class="card border-0" style="border-radius: 16px; border: 1px solid #CBD5E1; overflow: hidden;">
-                    <img [src]="libro.image_url || 'https://placehold.co/302x193'" class="card-img-top" alt="Libro" style="height: 193px; object-fit: cover;">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge rounded-pill px-3" style="background-color: #DBEAFE; color: #1E40AF;">
-                                {{ libro.operation_type }}
-                            </span>
-                            <h5 class="mb-0" style="color: #60A5FA;">€ {{ libro.price ?? 0 }}</h5>
-                        </div>
-                        <h6 class="mb-1" style="color: #1E3A5F; font-weight: 500;">{{ libro.title }}</h6>
-                        <p class="mb-2" style="color: #64748B; font-size: 14px;">Por {{ libro.author }}</p>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <small style="color: #64748B;">Estado: {{ libro.physical_condition }}</small>
-                            <small style="color: #64748B;">ID: {{ libro.id }}</small>
-                        </div>
-                        <div class="mb-3">
-                            <span class="badge w-100 py-1" style="background-color: #D1FAE5; color: #065F46;">
-                                {{ libro.operation_type === 'sale' ? 'Venta' : 'Intercambio' }}
-                            </span>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm flex-fill" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;">
-                                <i class="bi bi-eye me-1"></i>Ver
-                            </button>
-                            <button class="btn btn-sm flex-fill" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;">
-                                <i class="bi bi-pencil me-1"></i>Editar
-                            </button>
-                            <button class="btn btn-sm" style="background-color: #EFF6FF; color: #1E3A5F; border: 1px solid #CBD5E1;">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        } @empty {
-            <div class="col-12">
-                <div class="alert alert-info mb-0" role="alert">No hay libros disponibles.</div>
-            </div>
+    <div class="toolbar-filters">
+      <select class="form-select" [value]="selectedCategory()" (change)="onCategoryChange($event)">
+        <option value="all">Todas las categorias</option>
+        @for (category of categories(); track category.value) {
+          <option [value]="category.value">{{ category.label }}</option>
         }
+      </select>
+
+      <select class="form-select" [value]="selectedOperation()" (change)="onOperationChange($event)">
+        <option value="all">Todas las operaciones</option>
+        <option value="sale">Venta</option>
+        <option value="exchange">Intercambio</option>
+      </select>
     </div>
+  </div>
+
+  <div class="table-container">
+    @if (isLoading()) {
+      <div class="table-state">Cargando...</div>
+    } @else if (filteredBooks().length === 0) {
+      <div class="table-state">No se encontraron libros.</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table books-table align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Portada</th>
+              <th>Titulo</th>
+              <th>Autor</th>
+              <th>Categoria</th>
+              <th>Estado Fisico</th>
+              <th>Tipo Operacion</th>
+              <th>Precio</th>
+              <th class="actions-column">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (libro of filteredBooks(); track libro.id) {
+              <tr>
+                <td>
+                  <img
+                    [src]="libro.image_url || 'https://placehold.co/56x80'"
+                    [alt]="'Portada de ' + libro.title"
+                    class="book-thumb"
+                  >
+                </td>
+                <td class="book-title">{{ libro.title }}</td>
+                <td>{{ libro.author }}</td>
+                <td>{{ getBookCategoryName(libro) }}</td>
+                <td>
+                  <span class="condition-pill">{{ libro.physical_condition }}</span>
+                </td>
+                <td>
+                  <span
+                    class="operation-pill"
+                    [class.operation-sale]="isSaleOperation(libro.operation_type)"
+                    [class.operation-exchange]="!isSaleOperation(libro.operation_type)"
+                  >
+                    {{ operationLabel(libro.operation_type) }}
+                  </span>
+                </td>
+                <td>
+                  @if (isSaleOperation(libro.operation_type)) {
+                    <span>EUR {{ libro.price ?? 0 }}</span>
+                  } @else {
+                    <span class="text-muted">N/A</span>
+                  }
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" class="action-btn action-edit" aria-label="Editar libro" [routerLink]="['/libros/edit', libro.id]">
+                      <span class="action-icon" aria-hidden="true">✏️</span>
+                      <span>Editar</span>
+                    </button>
+                    <button type="button" class="action-btn action-delete" aria-label="Eliminar libro" (click)="eliminarLibro(libro.id)">
+                      <span class="action-icon" aria-hidden="true">🗑️</span>
+                      <span>Eliminar</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
 </div>

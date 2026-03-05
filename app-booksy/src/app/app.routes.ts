@@ -15,7 +15,8 @@ export const routes: Routes = [
     },
     {
         path:'register',
-        component:Register
+        component:Register,
+        canActivate: [authGuard]
     },
     {
         path:'dashboard',
@@ -23,9 +24,29 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path:'eventos/add',
+        canActivate: [authGuard],
+        loadComponent: () => import('./pages/add-event/add-event.component').then((m) => m.AddEventComponent)
+    },
+    {
+        path:'eventos/edit/:id',
+        canActivate: [authGuard],
+        loadComponent: () => import('./pages/edit-event/edit-event.component').then((m) => m.EditEventComponent)
+    },
+    {
         path:'eventos',
         component:Eventos,
         canActivate: [authGuard]
+    },
+    {
+        path:'libros/add',
+        canActivate: [authGuard],
+        loadComponent: () => import('./pages/add-book/add-book.component').then((m) => m.AddBookComponent)
+    },
+    {
+        path:'libros/edit/:id',
+        canActivate: [authGuard],
+        loadComponent: () => import('./pages/edit-book/edit-book.component').then((m) => m.EditBookComponent)
     },
     {
         path:'libros',

@@ -1,29 +1,182 @@
- .card-custom {
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-        }
-        .book-card {
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .book-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .book-image {
-            width: 100%;
-            height: 193px;
-            object-fit: cover;
-            background-color: #E0F2FE;
-        }
-        .badge-category {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--primary-dark);
-        }
-        .badge-available {
-            background-color: var(--primary-blue);
-            color: white;
-        }
+.table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    position: relative;
+    min-width: 280px;
+    flex: 1;
+}
+
+.search-wrapper i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 14px;
+}
+
+.search-wrapper .form-control {
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 10px 12px 10px 34px;
+}
+
+.toolbar-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.toolbar-filters .form-select {
+    min-width: 200px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+}
+
+.table-container {
+    border: 1px solid #cbd5e1;
+    border-radius: 16px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.books-table thead th {
+    background-color: #f8fafc;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.books-table tbody td {
+    color: #0f172a;
+    font-size: 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.books-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.book-thumb {
+    width: 56px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+    background: #f1f5f9;
+}
+
+.book-title {
+    max-width: 220px;
+    font-weight: 600;
+    color: #1e3a5f;
+}
+
+.condition-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1e40af;
+    font-size: 12px;
+}
+
+.operation-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.operation-sale {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.operation-exchange {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.actions-column {
+    width: 220px;
+}
+
+.row-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: #ffffff;
+    padding: 6px 10px;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+}
+
+.action-edit {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.action-delete {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.action-icon {
+    font-size: 14px;
+}
+
+.table-state {
+    padding: 32px 16px;
+    text-align: center;
+    color: #64748b;
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+    .search-wrapper {
+        min-width: 100%;
+    }
+
+    .toolbar-filters {
+        width: 100%;
+    }
+
+    .toolbar-filters .form-select {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .actions-column {
+        width: auto;
+    }
+}

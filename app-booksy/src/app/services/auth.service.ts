@@ -24,6 +24,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private apiUrl = environment.apiUrl;
+  private readonly userStorageKey = 'auth_user';
 
   // Signals para estado reactivo
   currentUser = signal<User | null>(null);
@@ -36,16 +37,6 @@ export class AuthService {
    */
   login(credentials: LoginCredentials): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap((response) => {
-        // Guardar el token en localStorage
-        localStorage.setItem('token', response.token);
-        
-        // Actualizar el signal del usuario actual
-        this.currentUser.set(response.user);
-        
-        // Redirigir al dashboard
-        this.router.navigate(['/dashboard']);
-      }),
       catchError(this.handleError)
     );
   }
@@ -56,11 +47,7 @@ export class AuthService {
   register(userData: any): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/register`, userData).pipe(
       tap((response) => {
-        // Guardar el token en localStorage
-        localStorage.setItem('token', response.token);
-        
-        // Actualizar el signal del usuario actual
-        this.currentUser.set(response.user);
+        this.setSession(response.token, response.user);
         
         // Redirigir al dashboard
         this.router.navigate(['/dashboard']);
@@ -91,6 +78,7 @@ export class AuthService {
   private clearSession(): void {
     // Eliminar el token del localStorage
     localStorage.removeItem('token');
+    localStorage.removeItem(this.userStorageKey);
     
     // Limpiar el signal del usuario
     this.currentUser.set(null);
@@ -108,11 +96,13 @@ export class AuthService {
       tap((user) => {
         // Actualizar el signal del usuario actual
         this.currentUser.set(user);
+        localStorage.setItem(this.userStorageKey, JSON.stringify(user));
       }),
       catchError((error: HttpErrorResponse) => {
         // Si falla (401, 403, etc), limpiar la sesión
         if (error.status === 401 || error.status === 403) {
           localStorage.removeItem('token');
+          localStorage.removeItem(this.userStorageKey);
           this.currentUser.set(null);
         }
         return throwError(() => error);
@@ -121,10 +111,57 @@ export class AuthService {
   }
 
   /**
+   * Indica si el usuario autenticado tiene rol admin
+   */
+  isAdmin(): boolean {
+    const signalUser = this.currentUser();
+
+    if (signalUser) {
+      return signalUser.role === 'admin';
+    }
+
+    const storedUser = this.getStoredUser();
+
+    if (storedUser) {
+      this.currentUser.set(storedUser);
+    }
+
+    return storedUser?.role === 'admin';
+  }
+
+  /**
    * Obtiene el token del localStorage
    */
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  /**
+   * Guarda token y usuario en sesion local cuando un admin inicia sesion.
+   */
+  startSession(token: string, user: User): void {
+    this.setSession(token, user);
+  }
+
+  private setSession(token: string, user: User): void {
+    localStorage.setItem('token', token);
+    localStorage.setItem(this.userStorageKey, JSON.stringify(user));
+    this.currentUser.set(user);
+  }
+
+  private getStoredUser(): User | null {
+    const rawUser = localStorage.getItem(this.userStorageKey);
+
+    if (!rawUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(rawUser) as User;
+    } catch {
+      localStorage.removeItem(this.userStorageKey);
+      return null;
+    }
   }
 
   /**
@@ -139,7 +176,7 @@ export class AuthService {
     } else {
       // Error del lado del servidor
       if (error.status === 401) {
-        errorMessage = 'Credenciales inválidas';
+        errorMessage = 'Correo o contraseña incorrectos';
       } else if (error.status === 422) {
         errorMessage = 'Datos de validación inválidos';
       } else if (error.status === 0) {

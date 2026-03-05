@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Book } from '../models/book.model';
+import { Book, BookRequest, BookResponse } from '../models/book.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +19,12 @@ export class BookService {
     return this.http.get<Book>(`${this.apiUrl}/books/${id}`);
   }
 
-  createBook(book: Partial<Book>): Observable<Book> {
-    return this.http.post<Book>(`${this.apiUrl}/books`, book);
+  getBook(id: number): Observable<Book> {
+    return this.getBookById(id);
+  }
+
+  createBook(bookData: BookRequest): Observable<BookResponse> {
+    return this.http.post<BookResponse>(`${this.apiUrl}/books`, bookData);
   }
 
   updateBook(id: number, book: Partial<Book>): Observable<Book> {
@@ -29,5 +33,11 @@ export class BookService {
 
   deleteBook(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/books/${id}`);
+  }
+
+  toggleAvailability(id: number, isAvailable: boolean): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/books/${id}`, {
+      is_available: isAvailable,
+    });
   }
 }

@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-usuarios',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css',
 })
@@ -24,25 +25,39 @@ export class Usuarios implements OnInit {
     return this.users.filter((user) => user.role === 'admin').length;
   }
 
-  updateRole(userId: number, role: string): void {
-    this.userService.updateUserRole(userId, role).subscribe({
+  cambiarRol(id: number, nuevoRol: string): void {
+    this.userService.updateRole(id, nuevoRol).subscribe({
       next: (updatedUser) => {
-        this.users = this.users.map((user) => (user.id === userId ? updatedUser : user));
+        this.users = this.users.map((user) => {
+          if (user.id !== id) {
+            return user;
+          }
+
+          return {
+            ...user,
+            ...updatedUser,
+            role: updatedUser.role ?? nuevoRol,
+          };
+        });
       },
       error: () => {
         this.errorMessage = 'No se pudo actualizar el rol del usuario.';
-      }
+      },
     });
   }
 
-  deleteUser(userId: number): void {
-    this.userService.deleteUser(userId).subscribe({
+  eliminarUsuario(id: number): void {
+    if (!confirm('¿Estas seguro de que deseas eliminar este usuario?')) {
+      return;
+    }
+
+    this.userService.deleteUser(id).subscribe({
       next: () => {
-        this.users = this.users.filter((user) => user.id !== userId);
+        this.users = this.users.filter((user) => user.id !== id);
       },
       error: () => {
         this.errorMessage = 'No se pudo eliminar el usuario.';
-      }
+      },
     });
   }
 
