@@ -1,204 +1,81 @@
 <div class="p-4" style="background: #F0F7FF; min-height: 100vh;">
-    <!-- Header -->
-    <div class="mb-4">
-        <h2 class="mb-1" style="color: #1E3A5F; font-size: 24px; font-weight: 500;">Dashboard</h2>
-        <p class="mb-0" style="color: #64748B;">Resumen general de la plataforma</p>
+  <div class="mb-4">
+    <h2 class="mb-1" style="color: #1E3A5F; font-size: 24px; font-weight: 500;">Dashboard</h2>
+    <p class="mb-0" style="color: #64748B;">Resumen general de la plataforma</p>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+  }
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card border-0 p-4" style="border-radius: 16px; background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%); color: white;">
+        <p class="mb-2" style="opacity: 0.9;">Usuarios Totales</p>
+        <h3 class="mb-0">{{ summary().total_users }}</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 p-4" style="border-radius: 16px; background: linear-gradient(135deg, #34D399 0%, #10B981 100%); color: white;">
+        <p class="mb-2" style="opacity: 0.9;">Libros Publicados</p>
+        <h3 class="mb-0">{{ summary().total_books }}</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 p-4" style="border-radius: 16px; background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%); color: white;">
+        <p class="mb-2" style="opacity: 0.9;">Meetups Activos</p>
+        <h3 class="mb-0">{{ summary().active_meetups }}</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 p-4" style="border-radius: 16px; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: white;">
+        <p class="mb-2" style="opacity: 0.9;">Intercambios Exitosos</p>
+        <h3 class="mb-0">{{ summary().successful_exchanges }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-lg-6">
+      <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
+        <h6 class="mb-4" style="color: #1E3A5F; font-weight: 500;">Últimos Movimientos</h6>
+
+        @if (isLoading()) {
+          <p class="mb-0" style="color: #64748B;">Cargando actividad reciente...</p>
+        } @else {
+          @for (activity of recentActivity(); track activity.type + '-' + activity.id) {
+            <div class="border-bottom pb-3 mb-3">
+              <p class="mb-1" style="color: #1E3A5F; font-weight: 500;">{{ activity.title }}</p>
+              <small style="color: #64748B;">{{ activity.subtitle }}</small>
+              <div>
+                <small style="color: #94A3B8;">{{ activity.created_at || 'Sin fecha' }}</small>
+              </div>
+            </div>
+          } @empty {
+            <p class="mb-0" style="color: #64748B;">No hay movimientos recientes.</p>
+          }
+        }
+      </div>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="mb-2" style="color: #64748B;">Usuarios Totales</p>
-                        <h4 class="mb-2" style="color: #1E3A5F;">12,543</h4>
-                        <div class="d-flex align-items-center gap-1">
-                            <span style="color: #00A63E;">▲</span>
-                            <span style="color: #00A63E;">+12.5%</span>
-                        </div>
-                    </div>
-                    <div class="p-3" style="background: rgba(96, 165, 250, 0.10); border-radius: 12px;">
-                        <i class="bi bi-people" style="font-size: 24px; color: #60A5FA;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-lg-6">
+      <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
+        <h6 class="mb-4" style="color: #1E3A5F; font-weight: 500;">Libros por categoría</h6>
 
-        <div class="col-md-3">
-            <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="mb-2" style="color: #64748B;">Transacciones</p>
-                        <h4 class="mb-2" style="color: #1E3A5F;">8,234</h4>
-                        <div class="d-flex align-items-center gap-1">
-                            <span style="color: #00A63E;">▲</span>
-                            <span style="color: #00A63E;">+8.2%</span>
-                        </div>
-                    </div>
-                    <div class="p-3" style="background: rgba(96, 165, 250, 0.10); border-radius: 12px;">
-                        <i class="bi bi-credit-card" style="font-size: 24px; color: #60A5FA;"></i>
-                    </div>
-                </div>
+        @for (category of topCategories(); track category.label) {
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <small style="color: #1E3A5F;">{{ category.label }}</small>
+              <small style="color: #64748B;">{{ category.count }}</small>
             </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="mb-2" style="color: #64748B;">Libros Publicados</p>
-                        <h4 class="mb-2" style="color: #1E3A5F;">15,678</h4>
-                        <div class="d-flex align-items-center gap-1">
-                            <span style="color: #00A63E;">▲</span>
-                            <span style="color: #00A63E;">+5.4%</span>
-                        </div>
-                    </div>
-                    <div class="p-3" style="background: rgba(96, 165, 250, 0.10); border-radius: 12px;">
-                        <i class="bi bi-book" style="font-size: 24px; color: #60A5FA;"></i>
-                    </div>
-                </div>
+            <div class="progress" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" [style.width.%]="category.width" style="background-color: #60A5FA;"></div>
             </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="mb-2" style="color: #64748B;">Eventos Activos</p>
-                        <h4 class="mb-2" style="color: #1E3A5F;">24</h4>
-                        <div class="d-flex align-items-center gap-1">
-                            <span style="color: #E7000B;">▼</span>
-                            <span style="color: #E7000B;">-2.1%</span>
-                        </div>
-                    </div>
-                    <div class="p-3" style="background: rgba(96, 165, 250, 0.10); border-radius: 12px;">
-                        <i class="bi bi-calendar-event" style="font-size: 24px; color: #60A5FA;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+          </div>
+        } @empty {
+          <p class="mb-0" style="color: #64748B;">Sin datos de categorías disponibles.</p>
+        }
+      </div>
     </div>
-
-    <!-- Charts Row -->
-    <div class="row g-3 mb-4">
-        <div class="col-lg-6">
-            <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <h6 class="mb-4" style="color: #1E3A5F;">Ventas y Compras Mensuales</h6>
-                <div style="height: 300px;" class="d-flex align-items-center justify-content-center text-muted">
-                    <small>Gráfico de líneas</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-                <h6 class="mb-4" style="color: #1E3A5F;">Libros Más Intercambiados</h6>
-                <div style="height: 300px;">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <small>Cien años de soledad</small>
-                            <small>154</small>
-                        </div>
-                        <div class="progress" style="height: 30px;">
-                            <div class="progress-bar" style="width: 97%; background-color: #8B5CF6;" role="progressbar"></div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <small>1984</small>
-                            <small>140</small>
-                        </div>
-                        <div class="progress" style="height: 30px;">
-                            <div class="progress-bar" style="width: 88%; background-color: #8B5CF6;" role="progressbar"></div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <small>El principito</small>
-                            <small>136</small>
-                        </div>
-                        <div class="progress" style="height: 30px;">
-                            <div class="progress-bar" style="width: 85%; background-color: #8B5CF6;" role="progressbar"></div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <small>Don Quijote</small>
-                            <small>123</small>
-                        </div>
-                        <div class="progress" style="height: 30px;">
-                            <div class="progress-bar" style="width: 77%; background-color: #8B5CF6;" role="progressbar"></div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <small>Sapiens</small>
-                            <small>116</small>
-                        </div>
-                        <div class="progress" style="height: 30px;">
-                            <div class="progress-bar" style="width: 73%; background-color: #8B5CF6;" role="progressbar"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Activity Section -->
-    <div class="card border-0 p-4" style="border-radius: 16px; border: 1px solid #CBD5E1;">
-        <h5 class="mb-4" style="color: #1E3A5F; font-weight: 500;">Actividad Reciente</h5>
-        
-        <div class="border-bottom pb-3 mb-3">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <p class="mb-1">
-                        <a href="#" class="text-decoration-none" style="color: #60A5FA;">Ana García</a>
-                        <span style="color: #1E3A5F;"> Publicó un libro</span>
-                    </p>
-                    <small style="color: #64748B;">El amor en los tiempos del cólera</small>
-                </div>
-                <small style="color: #64748B;">Hace 5 min</small>
-            </div>
-        </div>
-
-        <div class="border-bottom pb-3 mb-3">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <p class="mb-1">
-                        <a href="#" class="text-decoration-none" style="color: #60A5FA;">Carlos Ruiz</a>
-                        <span style="color: #1E3A5F;"> Compró</span>
-                    </p>
-                    <small style="color: #64748B;">La sombra del viento</small>
-                </div>
-                <small style="color: #64748B;">Hace 12 min</small>
-            </div>
-        </div>
-
-        <div class="border-bottom pb-3 mb-3">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <p class="mb-1">
-                        <a href="#" class="text-decoration-none" style="color: #60A5FA;">María López</a>
-                        <span style="color: #1E3A5F;"> Registró un evento</span>
-                    </p>
-                    <small style="color: #64748B;">Club de lectura - Noviembre</small>
-                </div>
-                <small style="color: #64748B;">Hace 25 min</small>
-            </div>
-        </div>
-
-        <div class="pb-3">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <p class="mb-1">
-                        <a href="#" class="text-decoration-none" style="color: #60A5FA;">Juan Pérez</a>
-                        <span style="color: #1E3A5F;"> Dejó feedback</span>
-                    </p>
-                    <small style="color: #64748B;">Excelente servicio</small>
-                </div>
-                <small style="color: #64748B;">Hace 1 hora</small>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
