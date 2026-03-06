@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookPhysicalCondition } from '../../models/book.model';
 import { BookService } from '../../services/book.service';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-edit-book',
@@ -16,11 +18,13 @@ export class EditBookComponent implements OnInit {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private bookService = inject(BookService);
+  private categoryService = inject(CategoryService);
 
   bookId: number | null = null;
   isLoading = true;
   isSubmitting = false;
   errorMessage = '';
+  categories: Category[] = [];
 
   physicalConditions: { value: BookPhysicalCondition; label: string }[] = [
     { value: 'new', label: 'Nuevo' },
@@ -60,6 +64,16 @@ export class EditBookComponent implements OnInit {
     }
 
     this.bookId = parsedId;
+
+    // Cargar categorias
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+      },
+      error: (err) => {
+        console.error('Error al cargar categorias:', err);
+      },
+    });
 
     this.bookService.getBook(parsedId).subscribe({
       next: (libro) => {
